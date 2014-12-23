@@ -1,0 +1,307 @@
+using System;
+using System.Diagnostics;
+using System.Drawing;
+using System.Collections;
+using System.Windows.Forms;
+
+namespace com.wallyatkins.games.neomines
+{
+  public class NeoMineBoard : Control
+  {
+    private bool _gameOver;
+    private double _gameTime;
+    private int _rows;
+    private int _cols;
+    private int _mines;
+    private int _remaining;
+    private int _nodeSize;
+    private int _spacing = 3;
+    private ArrayList _board;
+    
+    public NeoMineBoard(int rows, int cols, int mines)
+    {
+      this._gameOver = false;
+      this._gameTime = 0;
+      this._rows = rows;
+      this._cols = cols;
+      this._mines = mines;
+      this._remaining = this._rows * this._cols;
+      
+      InitializeComponent();
+    }
+    
+    private void InitializeComponent()
+    {
+      // Create the base ArrayList for the board
+      this._board = new ArrayList();
+      
+      // Add the sub ArrayLists and NeoMineNodes to populate the board
+      for (int i = 0; i < this._cols; i++)
+      {
+        this._board.Add(new ArrayList());
+        
+        for (int j = 0; j < this._rows; j++)
+        {
+          ((ArrayList)this._board[i]).Add(new NeoMineNode(i, j));
+        }
+      }
+      
+      // Randomly place the mines
+      Random random = new Random(DateTime.Now.Millisecond);
+      int minesPlaced = 0;
+      
+      while (minesPlaced < this._mines)
+      {
+        int randomRow = random.Next(0, this._rows);
+        int randomCol = random.Next(0, this._cols);
+        
+        if (!((NeoMineNode)((ArrayList)this._board[randomRow])[randomCol]).IsMine)
+        {
+          //MessageBox.Show("Mine places at [" + randomRow + ":" + randomCol + "]");
+          ((NeoMineNode)((ArrayList)this._board[randomRow])[randomCol]).IsMine = true;
+          minesPlaced++;
+        }
+      }
+      
+      // Count the surrounding mines
+      for (int i = 0; i < this._rows; i++)
+        for (int j = 0; j < this._cols; j++)
+          for (int k = -1; k < 2; k++)
+            for (int l = -1; l < 2; l++)
+              if (i+k >= 0 && i+k < this._rows && j+l >=0 && j+l < this._cols && !(k == 0 && l == 0))
+                if (((NeoMineNode)((ArrayList)this._board[i+k])[j+l]).IsMine)
+                  ((NeoMineNode)((ArrayList)this._board[i])[j]).NumberOfSurroundingMines++;
+    }
+    
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+      // Mark the click location
+      //this.Visual.BeginSolidFill(Color.Blue);
+      //this.Visual.DrawEllipse(e.X - 2, e.Y - 2, 4, 4);
+      //this.Visual.EndFill();
+      
+      NeoMineNode mine = FindNodeFromClick(e.X, e.Y);
+      
+      if (mine != null)
+      {
+        if (!this._gameOver)
+        {
+          //if (this._gameTime == 0)
+          //  return;
+          if (Control.ModifierKeys == Keys.None)
+          {
+            if (mine.Status == NeoMineNodeStatus.Flagged)
+               return;
+            else if (mine.IsMine)
+            {
+              mine.Status = NeoMineNodeStatus.DetonatedMine;
+              DrawMineBoard();
+            }
+            else if (mine.NumberOfSurroundingMines == 0)
+            {
+              RevealSurroundings(mine.ColumnNumber, mine.RowNumber);
+              DrawMineBoard();
+            }
+            else
+            {
+              mine.Status = NeoMineNodeStatus.Cleared;
+              DrawMineBoard();
+            }
+          }
+          else
+          {
+            switch (mine.Status)
+            {
+              case NeoMineNodeStatus.NotTouched:
+                mine.Status = NeoMineNodeStatus.Flagged;
+                DrawMineBoard();
+                break;
+              case NeoMineNodeStatus.Flagged:
+                mine.Status = NeoMineNodeStatus.QuestionMarked;
+                DrawMineBoard();
+                break;
+              case NeoMineNodeStatus.QuestionMarked:
+                mine.Status = NeoMineNodeStatus.NotTouched;
+                DrawMineBoard();
+                break;
+            }
+          }
+        }
+        
+        /*MessageBox.Show(
+          "MouseDown at [" + e.X + "," + e.Y + "]\n" +
+          "Surrounding Mines: " + mine.NumberOfSurroundingMines + "\n" +
+          ((mine.IsMine) ? "You hit a mine!" : "You're still safe.") + "\n" + 
+          ((Control.ModifierKeys == Keys.None) ? "No key is being pressed." : "A key is being pressed.")
+        );*/
+      }
+    }
+
+    //protected override void OnMouseUp(MouseEventArgs e)
+    //{
+    //  MessageBox.Show("MouseUp at [" + e.X + "," + e.Y + "]");
+    //}
+    
+    protected override void OnPaint(PaintEventArgs e)
+    {
+      DrawMineBoard();
+    }
+    
+    public override string ToString()
+    {
+      string board = "";
+      
+      for (int i = 0; i < this._rows; i++)
+      {
+        for (int j = 0; j < this._cols; j++)
+        {
+          if (((NeoMineNode)((ArrayList)this._board[i])[j]).IsMine)
+            board += "[*]";
+          else
+            board += "[" + ((NeoMineNode)((ArrayList)this._board[i])[j]).NumberOfSurroundingMines + "]";
+        }
+        board += "\n";
+      }
+      
+      return board;
+    }
+    
+    private NeoMineNode FindNodeFromClick(int x, int y)
+    {
+      int X = x / (this._nodeSize + this._spacing);
+      int Y = y / (this._nodeSize + this._spacing);
+      
+      if (Y < this._board.Count)
+        if (X < ((ArrayList)this._board[Y]).Count)
+           return ((NeoMineNode)((ArrayList)this._board[Y])[X]);
+      
+      return null;
+    }
+    
+    private Color GeMineColor(NeoMineNode node)
+    {
+      Color val;
+      
+      if (node.IsMine)
+      {
+        val = Color.Red;
+      }
+      else
+      {
+        switch (node.NumberOfSurroundingMines)
+        {
+          case 0:
+            val = Color.White;
+            break;
+          case 1:
+            val = Color.Gainsboro;
+            break;
+          case 2:
+            val = Color.Silver;
+            break;
+          case 3:
+            val = Color.Gray;
+            break;
+          case 4:
+            val = Color.SlateGray;
+            break;
+          case 5:
+            val = Color.DarkSlateGray;
+            break;
+          case 6:
+            val = Color.Black;
+            break;
+        }
+      }
+      
+      return val;
+    }
+    
+    private void RevealSurroundings(int column, int row)
+    {
+      for (int k = -1; k < 2; k++)
+      {
+        for (int l = -1; l < 2; l++)
+        {
+          if (row+k >= 0 && row+k < this._rows && column+l >=0 && column+l < this._cols && !(k == 0 && l == 0))
+          {
+            if (((NeoMineNode)((ArrayList)this._board[row+k])[column+l]).NumberOfSurroundingMines == 0 && ((NeoMineNode)((ArrayList)this._board[row+k])[column+l]).Status != NeoMineNodeStatus.Cleared)
+            {
+              ((NeoMineNode)((ArrayList)this._board[row+k])[column+l]).Status = NeoMineNodeStatus.Cleared;
+              RevealSurroundings(((NeoMineNode)((ArrayList)this._board[row+k])[column+l]).ColumnNumber, ((NeoMineNode)((ArrayList)this._board[row+k])[column+l]).RowNumber);
+            }
+            else
+            {
+              if (((NeoMineNode)((ArrayList)this._board[row+k])[column+l]).Status != NeoMineNodeStatus.Cleared)
+                ((NeoMineNode)((ArrayList)this._board[row+k])[column+l]).Status = NeoMineNodeStatus.Cleared;
+            }
+          }
+        }
+      }
+    }
+    
+    private void DrawMineBoard()
+    {
+      this.Visual.Clear();
+      
+      TextElement text;
+      Font font;
+      int nodeHeight = (this.Height - ((this._rows - 1) * this._spacing)) / this._rows;
+      int nodeWidth = (this.Width - ((this._cols - 1) * this._spacing)) / this._cols;
+      
+      if (nodeHeight < nodeWidth)
+        this._nodeSize = nodeHeight;
+      else
+        this._nodeSize = nodeWidth;
+      
+      for (int i = 0; i < this._rows; i++)
+      {
+        for (int j = 0; j < this._cols; j++)
+        {
+          this.Visual.SetStroke(2, Color.Black);
+          
+          switch (((NeoMineNode)((ArrayList)this._board[i])[j]).Status)
+          {
+            case NeoMineNodeStatus.NotTouched:
+              this.Visual.BeginSolidFill(Color.Silver);
+              break;
+            case NeoMineNodeStatus.Cleared:
+              this.Visual.BeginSolidFill(Color.White);
+              if (((NeoMineNode)((ArrayList)this._board[i])[j]).NumberOfSurroundingMines > 0)
+              {
+                font = new Font(new FontFamily("Arial"), this._nodeSize / 2, FontStyle.Bold, GraphicsUnit.Pixel);
+                text = new TextElement(this.Visual, ((NeoMineNode)((ArrayList)this._board[i])[j]).NumberOfSurroundingMines.ToString(), j * this._nodeSize + j * this._spacing, i * this._nodeSize + i * this._spacing, this._nodeSize, this._nodeSize, font);
+                text.Alignment = ContentAlignment.MiddleCenter;
+                text.Color = Color.Black;
+              }
+              break;
+            case NeoMineNodeStatus.Flagged:
+              this.Visual.BeginSolidFill(Color.Silver);
+              font = new Font(new FontFamily("Arial"), this._nodeSize / 2, FontStyle.Bold, GraphicsUnit.Pixel);
+              text = new TextElement(this.Visual, "!", j * this._nodeSize + j * this._spacing, i * this._nodeSize + i * this._spacing, this._nodeSize, this._nodeSize, font);
+              text.Alignment = ContentAlignment.MiddleCenter;
+              text.Color = Color.Gold;
+              break;
+            case NeoMineNodeStatus.QuestionMarked:
+              this.Visual.BeginSolidFill(Color.Silver);
+              font = new Font(new FontFamily("Arial"), this._nodeSize / 2, FontStyle.Bold, GraphicsUnit.Pixel);
+              text = new TextElement(this.Visual, "?", j * this._nodeSize + j * this._spacing, i * this._nodeSize + i * this._spacing, this._nodeSize, this._nodeSize, font);
+              text.Alignment = ContentAlignment.MiddleCenter;
+              text.Color = Color.Magenta;
+              break;
+            case NeoMineNodeStatus.DetonatedMine:
+              this.Visual.BeginSolidFill(Color.Red);
+              font = new Font(new FontFamily("Arial"), this._nodeSize / 2, FontStyle.Bold, GraphicsUnit.Pixel);
+              text = new TextElement(this.Visual, "*", j * this._nodeSize + j * this._spacing, i * this._nodeSize + i * this._spacing, this._nodeSize, this._nodeSize, font);
+              text.Alignment = ContentAlignment.MiddleCenter;
+              text.Color = Color.Black;
+              break;
+          }
+          
+          this.Visual.DrawRectangle(j * this._nodeSize + j * this._spacing, i * this._nodeSize + i * this._spacing, this._nodeSize, this._nodeSize);
+          this.Visual.EndFill();
+        }
+      }
+    }
+  }
+}

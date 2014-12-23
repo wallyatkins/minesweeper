@@ -1,0 +1,163 @@
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+
+namespace com.wallyatkins.games.neomines
+{
+  public class NeoMines : Form
+  {
+    private MenuStrip menu;
+    private ToolStripMenuItem file;
+    private ToolStripMenuItem help;
+    private ContextMenuStrip fileMenu;
+    private ContextMenuStrip helpMenu;
+    
+    private StatusStrip status;
+    private ToolStripStatusLabel statusLabel;
+    
+    private NeoMineBoard board;
+    
+    public NeoMines()
+    {
+      InitializeComponent();
+    }
+    
+    private void InitializeComponent()
+    {
+      this.SuspendLayout();
+      
+      this.BackColor = Color.Black;
+      
+      // Initialize the menu
+      this.menu = new MenuStrip();
+      this.file = new ToolStripMenuItem("File");
+      this.help = new ToolStripMenuItem("Help");
+      
+      // Add the menu items
+      this.menu.Items.Add(this.file);
+      this.menu.Items.Add(this.help);
+      
+      // Create the file context menu items
+      this.fileMenu = new ContextMenuStrip();
+      this.fileMenu.Items.Add(new ToolStripMenuItem("New" , -1, new EventHandler(OnMenuItem_Click)));
+      this.fileMenu.Items.Add(new ToolStripMenuItem("Exit", -1, new EventHandler(OnMenuItem_Click)));
+      
+      // Create the help context menu items
+      this.helpMenu = new ContextMenuStrip();
+      this.helpMenu.Items.Add(new ToolStripMenuItem("About NeoMines" , -1, new EventHandler(OnMenuItem_Click)));
+      
+      // Add the context menus
+      this.file.DropDown = this.fileMenu;
+      this.help.DropDown = this.helpMenu;
+      
+      // Position the menu
+      this.menu.Dock = DockStyle.Top;
+      this.menu.GripStyle = ToolStripGripStyle.Hidden;
+      
+      // Initialize the status
+      this.status = new StatusStrip();
+      this.statusLabel = new ToolStripStatusLabel();
+      this.statusLabel.Text = "Status";
+      this.status.Items.Add(this.statusLabel);
+
+      // Position the status
+      this.status.Dock = DockStyle.Bottom;
+      this.status.GripStyle = ToolStripGripStyle.Hidden;
+      
+      // Create and add the mine board
+      this.board = new NeoMineBoard(9, 9, 10);
+      this.board.BackColor = Color.White;
+      this.board.Size = new Size(Application.Width, Application.Height - this.menu.Height);
+      this.board.Location = new Point(0, this.menu.Bottom);
+      
+      // Add the controls
+      this.Controls.Add(this.menu);
+      //this.Controls.Add(this.status);
+      this.Controls.Add(this.board);
+      
+      this.ResumeLayout(false);
+    }
+    
+    private void OnMenuItem_Click(object sender, EventArgs e)
+    {
+      switch (((ToolStripItem)sender).Text)
+      {
+        case "New":
+          this.board.Dispose();
+          this.board = null;
+          this.board = new NeoMineBoard(9, 9, 10);
+          this.board.BackColor = Color.White;
+          this.board.Size = new Size(Application.Width, Application.Height - this.menu.Height);
+          this.board.Location = new Point(0, this.menu.Bottom);
+          this.Controls.Add(this.board);
+          break;
+        case "Exit":
+          break;
+        case "About NeoMines":
+          MessageBox.Show(
+            "NeoMines Version 0.1\n\n" +
+            PrintFlashPlayerInfo()
+          );
+          break;
+      }
+    }
+    
+    private string PrintFlashPlayerInfo()
+    {
+      string os = Environment.OSName;
+      string type;
+      string version = Environment.PlayerVersion.ToString();
+      string platform;
+      string language = Environment.Language;
+      string manufacturer = Environment.Manufacturer;
+      
+      switch (Environment.PlayerType)
+      {
+        case PlayerType.ActiveX:
+          type = "ActiveX";
+          break;
+        case PlayerType.StandAlone:
+          type = "Stand Alone";
+          break;
+        case PlayerType.Plugin:
+          type = "Plugin";
+          break;
+        case PlayerType.External:
+          type = "External";
+          break;
+        case PlayerType.Unknown:
+          type = "Unknown";
+          break;
+      }
+      
+      switch (Environment.Platform)
+      {
+        case Platform.Windows:
+          platform = "Windows";
+          break;
+        case Platform.MacOS:
+          platform = "Mac OS";
+          break;
+        case Platform.Unix:
+          platform = "Unix";
+          break;
+        case Platform.Unknown:
+          platform = "Unknown";
+          break;
+      }
+      
+      return "Flash Player Information:\n" +
+        "OS: " + os + "\n" +
+        "Type: " + type + "\n" +
+        "Version: " + version + "\n" +
+        "Platform: " + platform + "\n" +
+        "Language: " + language + "\n" +
+        "Manufacturer: " + manufacturer;
+    }
+    
+    static void Main()
+    {
+      Application.Run(new NeoMines());
+    }
+  }
+}

@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<!-- saved from url=(0047)http://www.cavalierwebdesign.com/mines/mine.htm -->
+<HTML><HEAD><TITLE>mines</TITLE>
+<META http-equiv=Content-Type content="text/html; charset=windows-1252"><LINK 
+href="mine_files/mine.css" type=text/css rel=StyleSheet>
+<SCRIPT src="mine_files/mine.js" type=text/javascript></SCRIPT>
+
+<SCRIPT language=JavaScript>
+			var objGame;
+			var MAX_ROWS = 10;
+			var MAX_COLS = 10;
+			var MAX_MINES = 10;
+			
+			function updateMines() {
+				document.all['mines'].innerHTML = objGame.intMines - objGame.intFlags;
+			}
+			
+			function updateTime() {
+				if(!objGame.boolGameOver) {
+					intGameTime++;
+					document.all['time'].innerHTML = intGameTime;
+					theTimer = window.setTimeout("updateTime();",1000);
+				}
+			}
+						
+			function init(level) {
+				intGameTime = 0;
+				switch(level) {
+					case 1:
+						objGame = new mineGame(9, 9, 10);
+						break;
+					case 2:
+						objGame = new mineGame(16, 16, 40);
+						break;
+					case 3:
+						objGame = new mineGame(16, 30, 99);
+						break;
+				}
+				objGame.createBoard();
+				document.all['time'].innerHTML = intGameTime;
+				document.all['mines'].innerHTML = objGame.intMines - objGame.intFlags;
+			}
+		</SCRIPT>
+
+<META content="MSHTML 6.00.2719.2200" name=GENERATOR></HEAD>
+<BODY onload=init(1)>
+<FORM id=mineGame name=mineGame>
+<TABLE cellSpacing=0 cellPadding=0 align=center border=0>
+  <TBODY>
+  <TR>
+    <TD vAlign=top align=left width=200 height=240>
+      <DIV 
+      style="PADDING-RIGHT: 3px; PADDING-LEFT: 3px; FONT-SIZE: 12px; BACKGROUND: #cccccc; PADDING-BOTTOM: 3px; WIDTH: 200px; PADDING-TOP: 3px; FONT-FAMILY: monospace; HEIGHT: 240px">Time: 
+
+      <DIV class=textBox id=time></DIV>Mines: 
+      <DIV class=textBox id=mines></DIV>
+      <DIV class=menuOff id=newBeginnerGame 
+      onmouseover="this.className='menuOn'" onclick=init(1) 
+      onmouseout="this.className='menuOff'" align=left>New Beginner Game</DIV>
+      <DIV class=menuOff id=newIntermediateGame 
+      onmouseover="this.className='menuOn'" onclick=init(2) 
+      onmouseout="this.className='menuOff'" align=left>New Intermediate 
+      Game</DIV>
+      <DIV class=menuOff id=newAdvancesGame 
+      onmouseover="this.className='menuOn'" onclick=init(3) 
+      onmouseout="this.className='menuOff'" align=left>New Advanced 
+      Game</DIV></DIV></TD>
+    <TD vAlign=center align=left width=450 height=240>
+      <DIV 
+      style="PADDING-RIGHT: 3px; PADDING-LEFT: 3px; FONT-SIZE: 12px; BACKGROUND: #cccccc; PADDING-BOTTOM: 3px; WIDTH: 475px; PADDING-TOP: 3px; FONT-FAMILY: monospace; HEIGHT: 240px">
+      <DIV id=mineBoard></DIV></DIV></TD></TR></TBODY></TABLE></FORM></BODY></HTML>

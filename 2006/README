@@ -1,0 +1,8 @@
+minesweeper 2006
+================
+
+This was a port of the JavaScript version minesweeper to NeoSwiff. Essentially, NeoSwiff was a way to write a C# Windows Forms application that compiled into a Flash SWF file. A rather neat idea back in the mid 2000's.
+
+A compiled version of the application is available under the bin/Releases since I don't think the NeoSwiff compiler is still available.
+
+An interesting experiment would be to take this code and to try and see if it works/compiles as an actual Windows Forms application.

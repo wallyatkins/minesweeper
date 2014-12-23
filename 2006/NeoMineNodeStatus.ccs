@@ -1,0 +1,12 @@
+namespace com.wallyatkins.games.neomines
+{
+  public enum NeoMineNodeStatus : int
+  {
+    NotTouched = 0,
+    Flagged = 1,
+    QuestionMarked = 2,
+    Cleared = 3,
+    DisplayedMine = 4,
+    DetonatedMine = 5
+  }
+}

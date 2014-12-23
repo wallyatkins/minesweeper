@@ -1,0 +1,5 @@
+public enum NeoNodeStatus : int
+{
+	NotClicked = 0,
+	Clicked = 1
+}

@@ -1,0 +1,9 @@
+.textBox {
+	BORDER-RIGHT: #000000 1px solid; PADDING-RIGHT: 3px; BORDER-TOP: #000000 1px solid; PADDING-LEFT: 3px; FONT-SIZE: 12px; BACKGROUND: #cccccc; PADDING-BOTTOM: 3px; BORDER-LEFT: #000000 1px solid; WIDTH: 50px; PADDING-TOP: 3px; BORDER-BOTTOM: #000000 1px solid; FONT-FAMILY: monospace; TEXT-ALIGN: right
+}
+.menuOn {
+	BORDER-RIGHT: #000000 1px solid; PADDING-RIGHT: 3px; BORDER-TOP: #000000 1px solid; PADDING-LEFT: 3px; FONT-SIZE: 12px; BACKGROUND: #dddddd; PADDING-BOTTOM: 3px; BORDER-LEFT: #000000 1px solid; WIDTH: 200px; CURSOR: hand; PADDING-TOP: 3px; BORDER-BOTTOM: #000000 1px solid; FONT-FAMILY: monospace
+}
+.menuOff {
+	BORDER-RIGHT: #cccccc 1px solid; PADDING-RIGHT: 3px; BORDER-TOP: #cccccc 1px solid; PADDING-LEFT: 3px; FONT-SIZE: 12px; BACKGROUND: #cccccc; PADDING-BOTTOM: 3px; BORDER-LEFT: #cccccc 1px solid; WIDTH: 200px; CURSOR: hand; PADDING-TOP: 3px; BORDER-BOTTOM: #cccccc 1px solid; FONT-FAMILY: monospace
+}

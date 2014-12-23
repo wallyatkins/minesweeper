@@ -1,0 +1,48 @@
+namespace com.wallyatkins.games.neomines
+{
+  public class NeoMineNode
+  {
+    private NeoMineNodeStatus _status;
+    private bool _isMine;
+    private int _surroundingMines;
+    private int _columnNumber;
+    private int _rowNumber;
+    
+    public NeoMineNode(int row, int column)
+    {
+      this._status = NeoMineNodeStatus.NotTouched;
+      this._isMine = false;
+      this._surroundingMines = 0;
+      this._rowNumber = row;
+      this._columnNumber = column;
+    }
+    
+    public NeoMineNodeStatus Status
+    {
+      get {return this._status;}
+      set {this._status = value;}
+    }
+    
+    public bool IsMine
+    {
+      get {return this._isMine;}
+      set {this._isMine = value;}
+    }
+    
+    public int NumberOfSurroundingMines
+    {
+      get {return this._surroundingMines;}
+      set {this._surroundingMines = value;}
+    }
+    
+    public int ColumnNumber
+    {
+      get {return this._columnNumber;}
+    }
+
+    public int RowNumber
+    {
+      get {return this._rowNumber;}
+    }
+  }
+}

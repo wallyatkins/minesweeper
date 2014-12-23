@@ -1,0 +1,76 @@
+<DioneProject>
+    <SCC
+        ProductVersion = "1"
+        ProjectGuid = "{13D97020-88BE-4296-9D6E-B80D58B67705}"
+    >
+        <Build>
+            <Settings
+                AssemblyName = "NeoMines"
+                OutputType = "SWF Movie"
+                MovieBackground = "#FFFFFF"
+                MovieCompress = "true"
+                MovieSWF6 = "false"
+                MovieFrameRate = "40"
+                MovieHeight = "300"
+                MovieWidth = "400"
+            >
+                <Config
+                    Name = "Debug"
+                    Platform = "SWF"
+                    OutputPath = "bin\Debug\"
+                    Optimize = "true"
+                    Debug = "true"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "1"
+                    AdditionalCommandLineOptions = ""
+                    DefineConstants = "DEBUG"
+                />
+                <Config
+                    Name = "Release"
+                    Platform = "SWF"
+                    OutputPath = "bin\Release\"
+                    Optimize = "true"
+                    Debug = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "1"
+                    AdditionalCommandLineOptions = ""
+                    DefineConstants = ""
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "System"
+                    AssemblyName = "System"
+                />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                />
+                <Reference
+                    Name = "System.Windows.Forms"
+                    AssemblyName = "System.Windows.Forms"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "NeoMineBoard.ccs"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NeoMines.ccs"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NeoMineNode.ccs"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "NeoMineNodeStatus.ccs"
+                    BuildAction = "Compile"
+                />
+            </Include>
+        </Files>
+    </SCC>
+</DioneProject>

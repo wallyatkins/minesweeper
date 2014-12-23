@@ -1,0 +1,31 @@
+public class NeoNode
+{
+	private NeoNodeStatus _status;
+	private bool _isMine;
+	private int _surroundingMines;
+
+	public NeoNode()
+	{
+		this._status = NeoNodeStatus.NotClicked;
+		this._isMine = false;
+		this._surroundingMines = 0;
+	}
+	
+	public NeoNodeStatus Status
+	{
+		get {return this._status;}
+		set {this._status = value;}
+	}
+	
+	public bool IsMine
+	{
+		get {return this._isMine;}
+		set {this._isMine = value;}
+	}
+	
+	public int NumberOfSurroundingMines
+	{
+		get {return this._surroundingMines;}
+		set {this._surroundingMines = value;}
+	}
+}
