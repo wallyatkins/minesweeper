@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minesweeper Retro Museum (2003 – 2026)</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --accent: #38bdf8;
+            --accent-glow: rgba(56, 189, 248, 0.3);
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Press Start 2P", monospace;
+            background: radial-gradient(circle at top, #1e293b, #090d16);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 20px;
+        }
+        header {
+            text-align: center;
+            max-width: 800px;
+            margin-bottom: 30px;
+        }
+        h1 {
+            font-size: 2.2rem;
+            color: #38bdf8;
+            text-shadow: 0 0 20px var(--accent-glow);
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+        p.subtitle {
+            font-size: 1.05rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+        .nav-tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 24px;
+            background: rgba(15, 23, 42, 0.8);
+            padding: 6px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-dim);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .tab-btn.active, .tab-btn:hover {
+            background: var(--accent);
+            color: #0f172a;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+        .museum-viewport {
+            width: 100%;
+            max-width: 880px;
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .viewport-header {
+            background: rgba(15, 23, 42, 0.9);
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .badge {
+            background: rgba(56, 189, 248, 0.15);
+            color: var(--accent);
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .game-frame-container {
+            width: 100%;
+            height: 580px;
+            background: #cbd5e1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: #cccccc;
+        }
+        #ruffle-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #000;
+        }
+        .description-footer {
+            padding: 20px;
+            background: rgba(15, 23, 42, 0.7);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            color: var(--text-dim);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .description-footer strong {
+            color: #f1f5f9;
+        }
+        .tab-panel {
+            display: none;
+        }
+        .tab-panel.active {
+            display: block;
+        }
+    </style>
+    <!-- Ruffle Flash Emulator for Web -->
+    <script src="https://unpkg.com/@ruffle-rs/ruffle"></script>
+</head>
+<body>
+
+    <header>
+        <h1>💣 Minesweeper Time Machine</h1>
+        <p class="subtitle">Experience the original 2003 Web 1.0 JavaScript game and the rare 2006 NeoSwiff Flash SWF edition.</p>
+    </header>
+
+    <div class="nav-tabs">
+        <button class="tab-btn active" onclick="switchTab('tab2003')">🕹️ 2003: DHTML Web 1.0</button>
+        <button class="tab-btn" onclick="switchTab('tab2006')">⚡ 2006: NeoSwiff Flash SWF</button>
+        <button class="tab-btn" onclick="switchTab('tab2026')">💎 2026: Turbo Bling (Easter Egg)</button>
+    </div>
+
+    <div class="museum-viewport">
+        <!-- 2003 Tab -->
+        <div id="tab2003" class="tab-panel active">
+            <div class="viewport-header">
+                <span><strong>Minesweeper 2003</strong> &mdash; IE6 & DHTML Era</span>
+                <span class="badge">Pure JavaScript &amp; HTML</span>
+            </div>
+            <div class="game-frame-container">
+                <iframe src="./2003/mine.htm" title="Minesweeper 2003"></iframe>
+            </div>
+            <div class="description-footer">
+                <strong>About this version:</strong> Created in 2003 for Cavalier Web Design. Features strict Hungarian notation (`boolGameOver`, `intSurroundingMines`), retro 16x16 GIF sprites, and recursive flood-fill area clearing.
+            </div>
+        </div>
+
+        <!-- 2006 Tab -->
+        <div id="tab2006" class="tab-panel">
+            <div class="viewport-header">
+                <span><strong>NeoMines 2006</strong> &mdash; Flash Era via NeoSwiff</span>
+                <span class="badge">C# WinForms compiled to SWF</span>
+            </div>
+            <div class="game-frame-container" style="background: #000;">
+                <div id="ruffle-container">
+                    <p style="color: #64748b; font-size: 0.9rem;">Initializing Ruffle Flash emulator...</p>
+                </div>
+            </div>
+            <div class="description-footer">
+                <strong>About this version:</strong> Written in C# Windows Forms and compiled directly into an Adobe Flash SWF using the legendary, discontinued NeoSwiff compiler. Emulated in modern web browsers via Ruffle WebAssembly.
+            </div>
+        </div>
+
+        <!-- 2026 Tab -->
+        <div id="tab2026" class="tab-panel">
+            <div class="viewport-header">
+                <span><strong>Neo-Mines 2026</strong> &mdash; Turbo Bling Edition</span>
+                <span class="badge">React 19 &amp; Web Audio</span>
+            </div>
+            <div class="game-frame-container" style="background: #090d16; flex-direction: column; text-align: center; padding: 40px; color: #fff;">
+                <h2 style="font-size: 1.8rem; color: #38bdf8; margin-bottom: 16px;">🎮 Hidden Easter Egg Unlocked</h2>
+                <p style="color: #94a3b8; max-width: 500px; margin-bottom: 24px; line-height: 1.6;">
+                    The modern Turbo Bling edition is playable live right on <a href="https://wallyatkins.com" target="_blank" style="color: #38bdf8;">wallyatkins.com</a>!
+                </p>
+                <div style="background: #1e293b; padding: 18px 24px; border-radius: 12px; border: 1px solid #334155; font-family: monospace; font-size: 1.1rem; color: #facc15; margin-bottom: 24px;">
+                    ↑ ↑ ↓ ↓ ← → ← → B A
+                </div>
+                <p style="color: #64748b; font-size: 0.9rem;">Enter the Konami Code anywhere on the site or use the D-Pad secret in the Principles section.</p>
+            </div>
+            <div class="description-footer">
+                <strong>About this version:</strong> Cyberpunk neon aesthetic, procedural 8-bit sound synthesis via Web Audio API, first-click protection, combo multipliers, radar scans, and mine shields.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ruffleLoaded = false;
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
+
+            if (tabId === 'tab2006' && !ruffleLoaded) {
+                loadRuffleFlash();
+            }
+        }
+
+        function loadRuffleFlash() {
+            try {
+                const ruffle = window.RufflePlayer.newest();
+                const player = ruffle.createPlayer();
+                const container = document.getElementById('ruffle-container');
+                container.innerHTML = '';
+                container.appendChild(player);
+                player.style.width = '100%';
+                player.style.height = '100%';
+                player.load('./2006/bin/Release/NeoMines.swf');
+                ruffleLoaded = true;
+            } catch (err) {
+                console.error("Ruffle failed to load:", err);
+            }
+        }
+    </script>
+</body>
+</html>
